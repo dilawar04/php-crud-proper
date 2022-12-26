@@ -34,6 +34,8 @@
             <th scope="col">Product Description</th>
             <th scope="col">Product Sku</th>
             <th scope="col">Product Price</th>
+            <th scope="col"></th>
+            <th scope="col">Status</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
         </tr>
@@ -45,14 +47,40 @@
                 $query = mysqli_query($connection,"SELECT * FROM channels")or die (mysqli_error($connection));
                 while ($row = mysqli_fetch_array($query)){
             ?>
+            <?php
+            // status
+            $status_array = [
+                '0'	=>	'InActive',
+                '1'	=>	'Active'
+            ];
+            $status_color = [
+                '0'	=>	'danger',
+                '1'	=>	'success'
+            ];
+            $action_array = [
+                '0'	=>	'Active',
+                '1'	=>	'InActive'
+            ];
+            $action_color = [
+                '0'	=>	'success',
+                '1'	=>	'danger'
+            ];
+
+            ?>
             <tr>
                 <th scope="row"><?php echo $row['id']; ?></th>
                 <td><?php echo $row['sony']; ?></td>
                 <td><?php echo $row['bol']; ?></td>
                 <td><?php echo $row['samaa']; ?></td>
                 <td><?php echo $row['ptv']; ?></td>
+                <td><span class="p-2 badge bg-<?= $status_color[$row['status']]; ?>"><?= $status_array[$row['status']]; ?></span>
+                    <a href="config/response.php?action=change_status&id=<?php echo $row['id']; ?>&status=<?=$row['status']?>"
+                       class="btn btn-sm btn-<?= $action_color[$row['status']]?>">
+                        <?= $action_array[$row['status']]?>
+                    </a>
+                <td>
                 <td><a href="edit.php?id=<?php echo $row['id']; ?>"><button class="btn btn-primary">Edit</button></a></td>
-                <td><a href="config/response.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are You Sure You Want to Delete this Todo')"><button class="btn btn-danger" name="delete">Delete</button></a></td>
+                <td><button class="btn btn-md bg-danger text-white"><a class="text-white" href="config/response.php?act=delete&id=<?= $row['id'];?>">Delete</a></button></td>
             </tr>
         <?php } ?>
         </tbody>

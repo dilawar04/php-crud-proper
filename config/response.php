@@ -37,23 +37,39 @@ if (isset($_REQUEST['edit']))
 
 }
 
-if(isset($_GET['id'])){
+if($_GET['act'] == 'delete'){
     $id = $_GET['id'];
-    $query = mysqli_query($connection,"SELECT * FROM channels WHERE id=$id") or die (mysqli_error($connection));
-    $row = mysqli_fetch_array($query);
-
-    $delete = mysqli_query($connection,"DELETE FROM channels WHERE id=$id") or die (mysqli_error($connection));
-
-    if($delete){
-        $msg = 'Your Record Delete Successfully';
-        $status = 'success';
-        header("Location:../index.php?act=$status&msg=$msg");
-    }else{
-        $msg = "SomeThing Went Wrong";
-        $status = 'error';
-        header("Location:../index.php?act=$status&msg=$msg");
+    $query = mysqli_query($connection, "DELETE FROM channels WHERE id=$id") or die(mysqli_error($connection));
+    if($query){
+        $msg = "Your Record Delete SuccessFully";
+        $act = 'success';
+        header("Location:../index.php?act=$act&msg=$msg");
     }
-    
+    else{
+        $msg = 'Your Record Doesn\'\t Delete Added';
+        $act = 'error';
+        header("Location:../index.php?act=$act&msg=$msg");
+    }
+}
+
+if(isset($_REQUEST['action']) && $_REQUEST['action']=="change_status"){
+    extract($_REQUEST);
+
+    if($status==1){
+        $status=0;
+    }else{
+        $status=1;
+    }
+    $res = mysqli_query($connection,"UPDATE channels SET status='$status' WHERE id=$id ")or die(mysqli_error($connection));
+    if($res){
+        $msg="User Status Change Successfully..!";
+        $status="success";
+        header("location:../index.php?act=$status&msg=$msg");
+    }else{
+        $msg="Something wents wrong Please Check and try again..!";
+        $status="error";
+        header("location:../index.php?act=$status&msg=$msg");
+    }
 }
 
 ?>
